@@ -101,7 +101,7 @@ export const publications: Publication[] = [
   {
     title: "A Poisson Transition and Bias Law for KSG Mutual-Information Estimation",
     authors: "Abhiram Gorle and Tsachy Weissman",
-    venue: "Weissman Research Group technical report · Stanford University",
+    venue: "Preprint · October 2026",
     year: 2026,
     topic: "Theory",
     href: "/papers/gorle-weissman-ksg-poisson-transition-2026.pdf",

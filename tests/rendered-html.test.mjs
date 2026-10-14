@@ -112,7 +112,7 @@ test("includes GitHub Pages and metadata assets", async () => {
   ]);
 });
 
-test("publishes the hosted KSG technical report and citation", async () => {
+test("publishes the hosted KSG preprint and citation", async () => {
   const html = await readRoute("publications");
 
   assert.match(
@@ -120,7 +120,7 @@ test("publishes the hosted KSG technical report and citation", async () => {
     /A Poisson Transition and Bias Law for KSG Mutual-Information Estimation/,
   );
   assert.match(html, /Abhiram Gorle and Tsachy Weissman/);
-  assert.match(html, /Weissman Research Group technical report/);
+  assert.match(html, /Preprint · October 2026/);
   assert.match(
     html,
     /href="\/papers\/gorle-weissman-ksg-poisson-transition-2026\.pdf"/,
