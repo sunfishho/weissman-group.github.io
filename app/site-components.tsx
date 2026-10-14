@@ -205,6 +205,7 @@ export function PublicationRow({
       </div>
       <div className="publication-links">
         <a href={publication.href}>paper ↗</a>
+        {publication.bib ? <a href={publication.bib}>bib ↗</a> : null}
         {publication.code ? <a href={publication.code}>code ↗</a> : null}
       </div>
     </article>

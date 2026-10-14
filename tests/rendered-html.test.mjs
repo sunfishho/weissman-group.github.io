@@ -97,7 +97,38 @@ test("includes GitHub Pages and metadata assets", async () => {
     access(new URL(".nojekyll", clientRoot)),
     access(new URL("og.png", clientRoot)),
     access(new URL("robots.txt", clientRoot)),
+    access(
+      new URL(
+        "papers/gorle-weissman-ksg-poisson-transition-2026.pdf",
+        clientRoot,
+      ),
+    ),
+    access(
+      new URL(
+        "papers/gorle-weissman-ksg-poisson-transition-2026.bib",
+        clientRoot,
+      ),
+    ),
   ]);
+});
+
+test("publishes the hosted KSG technical report and citation", async () => {
+  const html = await readRoute("publications");
+
+  assert.match(
+    html,
+    /A Poisson Transition and Bias Law for KSG Mutual-Information Estimation/,
+  );
+  assert.match(html, /Abhiram Gorle and Tsachy Weissman/);
+  assert.match(html, /Weissman Research Group technical report/);
+  assert.match(
+    html,
+    /href="\/papers\/gorle-weissman-ksg-poisson-transition-2026\.pdf"/,
+  );
+  assert.match(
+    html,
+    /href="\/papers\/gorle-weissman-ksg-poisson-transition-2026\.bib"/,
+  );
 });
 
 test("uses full document navigation on GitHub Pages", async () => {
