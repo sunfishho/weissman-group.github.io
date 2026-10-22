@@ -106,6 +106,7 @@ details[open] > summary > .plus::after { transform: rotate(0deg); }
 .essay th { font-weight: 500; font-size: 12px; border-bottom-color: var(--rule); }
 .essay tbody tr:last-child td { border-bottom: 0; }
 .references-section p { font-size: 16px; line-height: 22px; text-box-trim: none; }
+.essay .literature-note { color: var(--muted); font-size: 14px; line-height: 20px; text-box-trim: none; }
 .provenance-note { border-top: 1px solid var(--faint-rule); padding-top: 16px; color: var(--muted); font-size: 14px !important; line-height: 21px !important; text-box-trim: none; }
 .provenance-reference { font-size: .75em; line-height: 0; vertical-align: super; text-decoration: none; }
 .provenance-note .provenance-reference { font-size: inherit; line-height: inherit; vertical-align: baseline; }
