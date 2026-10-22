@@ -131,6 +131,17 @@ test("publishes the hosted KSG preprint and citation", async () => {
   );
 });
 
+test("renders the latest arXiv publication", async () => {
+  const html = await readRoute("publications");
+
+  assert.match(
+    html,
+    /Information, Estimation, and Prediction for Discrete Memoryless Channels via Poissonization/,
+  );
+  assert.match(html, /arXiv:2610\.27737/);
+  assert.match(html, /href="https:\/\/arxiv\.org\/abs\/2610\.27737"/);
+});
+
 test("uses full document navigation on GitHub Pages", async () => {
   const navigationSources = await Promise.all([
     readFile(new URL("minimal-home.tsx", appRoot), "utf8"),

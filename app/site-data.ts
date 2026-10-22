@@ -99,6 +99,16 @@ export const researchAreas: ResearchArea[] = [
 
 export const publications: Publication[] = [
   {
+    title:
+      "Information, Estimation, and Prediction for Discrete Memoryless Channels via Poissonization",
+    authors: "Abhiram Gorle and Tsachy Weissman",
+    venue: "arXiv:2610.27737",
+    year: 2026,
+    topic: "Theory",
+    href: "https://arxiv.org/abs/2610.27737",
+    note: "Information–estimation relations",
+  },
+  {
     title: "A Poisson Transition and Bias Law for KSG Mutual-Information Estimation",
     authors: "Abhiram Gorle and Tsachy Weissman",
     venue: "Preprint · October 2026",
