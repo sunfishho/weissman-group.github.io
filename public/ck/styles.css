@@ -31,21 +31,27 @@ h1 { margin: 0; max-width: 922px; font: 350 64px/64px var(--sans); letter-spacin
 details > summary { cursor: pointer; list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
 .chaptering { margin: 0 0 40px; }
-.chaptering > summary { display: flex; align-items: flex-start; gap: 36px; min-height: 52px; border-top: 1px solid var(--rule); padding: 8px 0 20px; font: 400 12px/24px var(--sans); letter-spacing: normal; text-transform: uppercase; color: var(--muted); }
-.chaptering[open] > summary { color: #000; margin-bottom: 20px; }
+.chaptering > h2 { margin: 0; padding: 8px 0 18px; border-top: 1px solid var(--rule); font: 400 12px/18px var(--sans); letter-spacing: normal; text-transform: uppercase; color: var(--muted); }
 .plus { position: relative; width: 12px; height: 12px; flex: none; margin-top: 3px; color: currentColor; }
 .plus::before, .plus::after { content: ""; position: absolute; top: 5px; left: 0; width: 10px; height: 1px; background: currentColor; }
 .plus::after { transform: rotate(90deg); }
 details[open] > summary > .plus::after { transform: rotate(0deg); }
 .toc-nav ul { padding: 0; margin: 0; list-style: none; }
-.toc-nav > ul > li { margin: 0; }
-.toc-nav > ul > li > a { display: flex; align-items: flex-start; gap: 18px; min-height: 52px; padding: 8px 0 20px; border-top: 1px solid var(--rule); text-decoration: none; font: 400 12px/24px var(--sans); text-transform: uppercase; color: var(--muted); letter-spacing: normal; }
-.toc-nav > ul > li > a:hover, .toc-nav a[aria-current="true"] { color: #000; }
-.toc-number { display: block; width: 30px; flex: none; font: 400 28px/28px var(--mono); letter-spacing: -.02em; text-transform: none; }
-.toc-nav .toc-subitems { margin: 0 0 20px 12px; }
-.toc-subitems a { display: flex; gap: 22px; padding: 8px 0; color: var(--muted); text-decoration: none; font: 400 12px/15px var(--sans); letter-spacing: normal; }
+.toc-nav .toc-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+.toc-main > li { margin: 0; min-width: 0; border-top: 1px solid var(--faint-rule); }
+.toc-main > li > a { display: flex; align-items: flex-start; gap: 14px; min-height: 56px; padding: 10px 0 12px; text-decoration: none; font: 400 12px/18px var(--sans); text-transform: uppercase; color: var(--muted); letter-spacing: normal; }
+.toc-main > li > a:hover, .toc-nav a[aria-current="true"] { color: #000; }
+.toc-number { display: block; width: 24px; flex: none; font: 400 20px/22px var(--mono); letter-spacing: -.02em; text-transform: none; }
+.toc-details { margin-top: 4px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--faint-rule); }
+.toc-details > summary { display: flex; align-items: center; gap: 20px; padding: 12px 0; font: 400 12px/18px var(--sans); color: var(--muted); letter-spacing: normal; text-transform: uppercase; }
+.toc-details > summary > .plus { margin-top: 0; }
+.toc-details[open] > summary { color: #000; }
+.toc-nav .toc-section-list { display: flex; flex-direction: column; gap: 18px; padding: 6px 0 20px; }
+.toc-section-label { display: block; margin-bottom: 6px; font: 400 12px/18px var(--sans); letter-spacing: normal; text-decoration: none; text-transform: uppercase; }
+.toc-nav .toc-subitems { margin-left: 0; }
+.toc-subitems a { display: flex; gap: 14px; padding: 6px 0; color: var(--muted); text-decoration: none; font: 400 12px/17px var(--sans); letter-spacing: normal; }
 .toc-subitems a:hover { color: #000; }
-.toc-subnumber { width: 14px; font-size: 10px; }
+.toc-subnumber { width: 24px; flex: none; font-size: 10px; }
 .essay { display: flex; flex-direction: column; gap: 48px; }
 .essay-section, .author-section, .essay-opening { display: flex; flex-direction: column; align-items: stretch; gap: 24px; margin: 0; min-width: 0; }
 .essay h2 { margin: 0 0 -4px; font: 400 28px/36.4px var(--mono); letter-spacing: -.02em; text-box-trim: trim-both; text-box-edge: cap alphabetic; }
@@ -56,6 +62,7 @@ details[open] > summary > .plus::after { transform: rotate(0deg); }
 .essay li { padding-left: 0; margin: 0; }
 .essay li::marker { font-size: .8em; }
 .essay li > p + p { margin-top: 12px; }
+.essay li > ul, .essay li > ol { margin-top: 12px; }
 .essay a.citation { color: inherit; text-decoration: none; font-size: .8em; font-weight: 400; }
 .essay a.citation:hover { text-decoration: underline; }
 .essay blockquote { margin: 0; padding-left: 20px; border-left: 1px solid var(--rule); color: var(--muted); }
@@ -152,10 +159,12 @@ details[open] > summary > .plus::after { transform: rotate(0deg); }
   .article-meta { font-size: 10px; line-height: 13px; }
   .article-main { padding-top: 52px; }
   .chaptering { margin-bottom: 32px; }
-  .chaptering > summary { min-height: 46px; padding-bottom: 14px; gap: 24px; font-size: 11px; }
-  .toc-nav > ul > li > a { min-height: 46px; gap: 12px; padding-bottom: 14px; font-size: 11px; line-height: 20px; }
-  .toc-number { width: 24px; font-size: 23px; line-height: 23px; }
-  .toc-subitems a { font-size: 11px; gap: 14px; }
+  .chaptering > h2 { font-size: 11px; padding-bottom: 14px; }
+  .toc-nav .toc-main { grid-template-columns: minmax(0, 1fr); }
+  .toc-main > li > a { min-height: 44px; gap: 12px; padding: 10px 0; font-size: 11px; line-height: 17px; }
+  .toc-number { width: 24px; font-size: 18px; line-height: 20px; }
+  .toc-details > summary { font-size: 11px; }
+  .toc-section-label, .toc-subitems a { font-size: 11px; }
   body { font-size: 18px; line-height: 23.4px; }
   .essay { gap: 40px; }
   .essay-section, .author-section, .essay-opening { gap: 22px; }

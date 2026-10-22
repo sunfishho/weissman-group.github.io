@@ -34,7 +34,6 @@
   document.querySelectorAll('[data-view]').forEach(link => link.addEventListener('click', event => { if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); showView(link.dataset.view, true); }));
   document.querySelectorAll('[data-density]').forEach(button => { if (button.tagName !== 'BUTTON') return; button.addEventListener('click', () => { document.querySelector('.article-list').dataset.density = button.dataset.density; document.querySelectorAll('.density-controls button').forEach(b => b.setAttribute('aria-pressed', String(b === button))); }); });
   document.querySelectorAll('[data-category]').forEach(button => button.addEventListener('click', () => { document.querySelectorAll('[data-category]').forEach(b => b.setAttribute('aria-pressed', String(b === button))); }));
-  document.querySelectorAll('.toc-nav a').forEach(link => link.addEventListener('click', () => { document.getElementById('contents').open = false; }));
   function revealHash() {
     if (!location.hash) return;
     let target; try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch { return; }
