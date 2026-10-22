@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light">
+  <title>Courtade–Kumar private draft</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='white'/%3E%3Cpath d='M9 9v22m22-22v22M9 20h22' stroke='%23202020' stroke-width='4'/%3E%3Ccircle cx='20' cy='20' r='4' fill='%23ad412e'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header"><a class="wordmark" href="./"><svg class="brand-mark" viewBox="0 0 96 68" fill="none" aria-hidden="true"><rect x="9" width="12" height="10" fill="#963323"/><rect x="51" width="39" height="10" fill="#a71cba"/><rect y="22" width="51" height="11" fill="#83a6ee"/><rect x="61" y="22" width="27" height="11" fill="#f3ed78"/><rect x="18" y="34" width="38" height="11" fill="#34349b"/><rect x="52" y="45" width="44" height="11" fill="#819b42"/><rect x="29" y="57" width="11" height="11" fill="#2b2a69"/><rect x="63" y="57" width="25" height="11" fill="#295b34"/></svg><span class="brand-name">COURTADE–KUMAR</span></a><p class="site-credit">Private research notes</p></header>
+  <main class="unlock-shell">
+    <h1>A Bit,<br> Too Many Proofs?</h1>
+    <p class="intro">Enter the shared password to read the draft.</p>
+    <form id="unlock-form" class="unlock-form">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required spellcheck="false" autocapitalize="none">
+      <button type="submit">Open the essay →</button>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </form>
+    <noscript><p>JavaScript is needed to open this encrypted draft.</p></noscript>
+  </main>
+  <footer class="site-footer"><div class="footer-inner"><div class="footer-wordmark"><svg class="brand-mark" viewBox="0 0 96 68" fill="none" aria-hidden="true"><rect x="9" width="12" height="10" fill="#963323"/><rect x="51" width="39" height="10" fill="#a71cba"/><rect y="22" width="51" height="11" fill="#83a6ee"/><rect x="61" y="22" width="27" height="11" fill="#f3ed78"/><rect x="18" y="34" width="38" height="11" fill="#34349b"/><rect x="52" y="45" width="44" height="11" fill="#819b42"/><rect x="29" y="57" width="11" height="11" fill="#2b2a69"/><rect x="63" y="57" width="25" height="11" fill="#295b34"/></svg><span class="brand-name">COURTADE–KUMAR</span></div><div class="footer-meta"><p>Private collaborator draft</p></div></div></footer>
+  <script>
+  (() => {
+    'use strict';
+    const form = document.getElementById('unlock-form');
+    const field = document.getElementById('password');
+    const button = form.querySelector('button');
+    const status = document.getElementById('status');
+    const fromBase64 = value => Uint8Array.from(atob(value), character => character.charCodeAt(0));
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (button.disabled) return;
+      if (!globalThis.crypto?.subtle) {
+        status.textContent = 'Open this preview over HTTPS or on localhost to unlock it.';
+        return;
+      }
+      button.disabled = true;
+      status.textContent = 'Opening the draft…';
+      let secret = field.value;
+      field.value = '';
+      let unlocked = false;
+      try {
+        const response = await fetch('article.enc', { cache: 'no-store', credentials: 'same-origin' });
+        if (!response.ok) throw new Error('download');
+        const payload = await response.json();
+        if (payload.version !== 1 || payload.algorithm !== 'AES-GCM' || payload.kdf !== 'PBKDF2'
+            || payload.hash !== 'SHA-256' || payload.iterations !== 310000) throw new Error('format');
+        const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), 'PBKDF2', false, ['deriveKey']);
+        secret = '';
+        const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: fromBase64(payload.salt),
+          iterations: payload.iterations, hash: payload.hash }, material,
+          { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+        let plaintext;
+        try {
+          plaintext = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromBase64(payload.iv), tagLength: 128 }, key, fromBase64(payload.data));
+        } catch {
+          status.textContent = 'That password did not open the draft. Please try again.';
+          field.focus();
+          return;
+        }
+        const html = new TextDecoder('utf-8', { fatal: true }).decode(plaintext);
+        const parsed = new DOMParser().parseFromString(html, 'text/html');
+        if (!parsed.querySelector('article')) throw new Error('document');
+        document.documentElement.lang = parsed.documentElement.lang || 'en';
+        document.head.replaceWith(document.importNode(parsed.head, true));
+        document.body.replaceWith(document.importNode(parsed.body, true));
+        window.scrollTo(0, 0);
+        // DOMParser scripts are inert. The entire essay is in place before the
+        // deferred runtime is activated, just as it is in the normal edition.
+        for (const inert of document.querySelectorAll('script')) {
+          const executable = document.createElement('script');
+          for (const attribute of inert.attributes) executable.setAttribute(attribute.name, attribute.value);
+          if (executable.src && !executable.hasAttribute('async')) executable.async = false;
+          executable.textContent = inert.textContent;
+          inert.replaceWith(executable);
+        }
+        unlocked = true;
+      } catch {
+        status.textContent = 'The draft could not be loaded. Please reload the page and try again.';
+      } finally {
+        secret = '';
+        field.value = '';
+        if (!unlocked) button.disabled = false;
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,9 +1,83 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const clientRoot = new URL("../dist/client/", import.meta.url);
 const appRoot = new URL("../app/", import.meta.url);
+
+test("exports the CK password screen without plaintext article content", async () => {
+  const html = await readFile(new URL("ck/index.html", clientRoot), "utf8");
+  const payload = JSON.parse(
+    await readFile(new URL("ck/article.enc", clientRoot), "utf8"),
+  );
+
+  assert.match(html, /<form[^>]+id="unlock-form"/);
+  assert.match(html, /type="password"/);
+  assert.match(html, /name="robots" content="noindex, nofollow, noarchive"/);
+  assert.match(html, /class="wordmark" href="\.\/"/);
+  assert.match(html, /fetch\('article\.enc'/);
+  assert.doesNotMatch(html, /<article\b|class="essay"|class="katex"/);
+  assert.equal(payload.algorithm, "AES-GCM");
+  assert.equal(payload.kdf, "PBKDF2");
+  assert.equal(payload.hash, "SHA-256");
+  assert.equal(payload.iterations, 310_000);
+  assert.equal(Buffer.from(payload.salt, "base64").length, 32);
+  assert.equal(Buffer.from(payload.iv, "base64").length, 12);
+  assert.ok(Buffer.from(payload.data, "base64").length > 100_000);
+  assert.deepEqual(Object.keys(payload).sort(), [
+    "algorithm", "data", "hash", "iterations", "iv", "kdf", "salt", "version",
+  ]);
+
+  await Promise.all([
+    access(new URL("ck/styles.css", clientRoot)),
+    access(new URL("ck/blog.js", clientRoot)),
+    access(new URL("ck/assets/fonts/inter-latin.woff2", clientRoot)),
+    access(new URL("ck/assets/fonts/geist-mono-latin.woff2", clientRoot)),
+    access(new URL("ck/assets/fonts/inter-OFL.txt", clientRoot)),
+    access(new URL("ck/assets/fonts/geist-mono-OFL.txt", clientRoot)),
+    access(new URL("ck/assets/katex/katex.min.css", clientRoot)),
+    access(new URL("ck/assets/katex/LICENSE.txt", clientRoot)),
+  ]);
+});
+
+test("copies only the approved encrypted CK runtime files, byte for byte", async () => {
+  const source = new URL("../public/ck/", import.meta.url);
+  const exported = new URL("ck/", clientRoot);
+  const rootFiles = new Set(["index.html", "article.enc", "styles.css", "blog.js"]);
+  const directories = new Set([
+    "assets", "assets/fonts", "assets/katex", "assets/katex/fonts",
+  ]);
+
+  async function verify(relative = "") {
+    const entries = await readdir(new URL(relative, source), { withFileTypes: true });
+    const outputEntries = await readdir(new URL(relative, exported));
+    assert.deepEqual(outputEntries.sort(), entries.map(entry => entry.name).sort());
+    for (const entry of entries) {
+      const path = relative + entry.name;
+      assert.equal(entry.isSymbolicLink(), false, path);
+      if (entry.isDirectory()) {
+        assert.ok(directories.has(path), path);
+        await verify(path + "/");
+      } else {
+        assert.ok(entry.isFile(), path);
+        assert.ok(
+          rootFiles.has(path)
+          || path === "assets/katex/katex.min.css"
+          || path === "assets/katex/LICENSE.txt"
+          || /^assets\/fonts\/(inter-latin\.woff2|geist-mono-latin\.woff2|inter-OFL\.txt|geist-mono-OFL\.txt)$/.test(path)
+          || /^assets\/katex\/fonts\/[a-zA-Z0-9_.-]+\.(woff2?|ttf)$/.test(path),
+          path,
+        );
+        assert.deepEqual(
+          await readFile(new URL(path, exported)),
+          await readFile(new URL(path, source)),
+          path,
+        );
+      }
+    }
+  }
+  await verify();
+});
 
 async function readRoute(route = "") {
   const filename = route ? `${route}.html` : "index.html";
