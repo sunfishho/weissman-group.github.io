@@ -219,7 +219,7 @@ test("renders the latest arXiv publication", async () => {
   assert.match(html, /href="https:\/\/arxiv\.org\/abs\/2610\.27737"/);
 });
 
-test("links the Courtade–Kumar research notes from publications", async () => {
+test("links the Courtade–Kumar research blog from publications", async () => {
   const html = await readRoute("publications");
 
   assert.match(
@@ -227,6 +227,8 @@ test("links the Courtade–Kumar research notes from publications", async () => 
     /A Bit, Too Many Proofs\? Our Journey Through the Courtade–Kumar Conjecture/,
   );
   assert.match(html, /Matthew Ho, Abhiram Gorle, and Tsachy Weissman/);
+  assert.match(html, /Open Problems in Information Theory/);
+  assert.match(html, /Research blog/);
   assert.match(html, /href="\/ck\/"/);
 });
 

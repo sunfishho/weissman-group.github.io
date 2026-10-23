@@ -102,11 +102,11 @@ export const publications: Publication[] = [
     title:
       "A Bit, Too Many Proofs? Our Journey Through the Courtade–Kumar Conjecture",
     authors: "Matthew Ho, Abhiram Gorle, and Tsachy Weissman",
-    venue: "Research notes",
+    venue: "Research blog",
     year: 2026,
     topic: "Theory",
     href: "/ck/",
-    note: "Boolean functions",
+    note: "Open Problems in Information Theory",
   },
   {
     title:
