@@ -110,6 +110,11 @@ details[open] > summary > .plus::after { transform: rotate(0deg); }
 .essay th { font-weight: 500; font-size: 12px; border-bottom-color: var(--rule); }
 .essay tbody tr:last-child td { border-bottom: 0; }
 .references-section p { font-size: 16px; line-height: 22px; text-box-trim: none; }
+.reference-source-guide { margin: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--faint-rule); font: 350 16px/22px var(--sans); letter-spacing: normal; }
+.reference-source-guide > summary { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; font-weight: 400; }
+.reference-source-guide > summary::before { content: "+"; flex: none; font-family: var(--mono); }
+.reference-source-guide[open] > summary::before { content: "−"; }
+.reference-source-body { display: flex; flex-direction: column; gap: 18px; padding: 4px 0 20px; }
 .essay .literature-note { color: var(--muted); font-size: 14px; line-height: 20px; text-box-trim: none; }
 .provenance-note { border-top: 1px solid var(--faint-rule); padding-top: 16px; color: var(--muted); font-size: 14px !important; line-height: 21px !important; text-box-trim: none; }
 .provenance-reference { font-size: .75em; line-height: 0; vertical-align: super; text-decoration: none; }
