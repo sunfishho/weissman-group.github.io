@@ -218,6 +218,17 @@ test("renders the latest arXiv publication", async () => {
   assert.match(html, /href="https:\/\/arxiv\.org\/abs\/2610\.27737"/);
 });
 
+test("links the Courtade–Kumar research notes from publications", async () => {
+  const html = await readRoute("publications");
+
+  assert.match(
+    html,
+    /A Bit, Too Many Proofs\? Our Journey Through the Courtade–Kumar Conjecture/,
+  );
+  assert.match(html, /Matthew Ho, Abhiram Gorle, and Tsachy Weissman/);
+  assert.match(html, /href="\/ck\/"/);
+});
+
 test("uses full document navigation on GitHub Pages", async () => {
   const navigationSources = await Promise.all([
     readFile(new URL("minimal-home.tsx", appRoot), "utf8"),

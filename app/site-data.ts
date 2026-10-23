@@ -100,6 +100,16 @@ export const researchAreas: ResearchArea[] = [
 export const publications: Publication[] = [
   {
     title:
+      "A Bit, Too Many Proofs? Our Journey Through the Courtade–Kumar Conjecture",
+    authors: "Matthew Ho, Abhiram Gorle, and Tsachy Weissman",
+    venue: "Research notes",
+    year: 2026,
+    topic: "Theory",
+    href: "/ck/",
+    note: "Boolean functions",
+  },
+  {
+    title:
       "Information, Estimation, and Prediction for Discrete Memoryless Channels via Poissonization",
     authors: "Abhiram Gorle and Tsachy Weissman",
     venue: "arXiv:2610.27737",
