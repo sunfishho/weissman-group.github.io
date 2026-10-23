@@ -94,6 +94,9 @@ details[open] > summary > .plus::after { transform: rotate(0deg); }
 .visual-slot { display: flex; flex-direction: column; gap: 10px; margin: 8px 0; padding: 22px 24px; border: 1px solid #d9d7d2; }
 .essay .visual-slot-label { color: var(--muted); font: 400 11px/16px var(--mono); letter-spacing: .02em; text-transform: uppercase; text-box-trim: none; }
 .visual-slot-caption { color: var(--muted); font: 350 15px/20px var(--sans); letter-spacing: normal; }
+.figure-number { font-weight: 550; }
+.blog-figure, .visual-slot { scroll-margin-top: 24px; }
+.essay a[href^="#fig-"] { white-space: nowrap; }
 .blog-figure { display: flex; flex-direction: column; gap: 16px; min-width: 0; margin: 12px 0; }
 .blog-figure-image { width: 100%; min-width: 0; }
 .blog-figure-image img { display: block; width: 100%; height: auto; max-width: 100%; }
