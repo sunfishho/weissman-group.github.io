@@ -82,6 +82,18 @@ test("copies only the approved encrypted CK runtime files, byte for byte", async
   await verify();
 });
 
+test("ships the accessible CK figure lightbox runtime", async () => {
+  const script = await readFile(new URL("ck/blog.js", clientRoot), "utf8");
+  const styles = await readFile(new URL("ck/styles.css", clientRoot), "utf8");
+  assert.match(script, /figureDialog\.showModal\(\)/);
+  assert.match(script, /figure-lightbox-close/);
+  assert.match(script, /figureOpener\?\.focus/);
+  assert.match(script, /Fit to window/);
+  assert.match(styles, /\.figure-lightbox::backdrop/);
+  assert.match(styles, /\.figure-lightbox\.is-enlarged/);
+  assert.match(styles, /\.figure-expand:focus-visible/);
+});
+
 async function readRoute(route = "") {
   const filename = route ? `${route}.html` : "index.html";
   return readFile(new URL(filename, clientRoot), "utf8");

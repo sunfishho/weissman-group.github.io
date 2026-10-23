@@ -14,6 +14,63 @@
   const publicationTitle = document.title;
   let activeView = 'article';
   let queued = false;
+  const figureDialog = document.getElementById('figure-lightbox');
+  const figureTitle = document.getElementById('figure-lightbox-title');
+  const figureCaption = document.getElementById('figure-lightbox-caption');
+  const figurePane = document.getElementById('figure-lightbox-scroll');
+  const figureImage = figureDialog?.querySelector('.figure-lightbox-image');
+  const figureZoom = figureDialog?.querySelector('.figure-lightbox-zoom');
+  let figureOpener;
+  function setFigureZoom(enlarged) {
+    figureDialog?.classList.toggle('is-enlarged', enlarged);
+    figureZoom?.setAttribute('aria-pressed', String(enlarged));
+    if (figureZoom) figureZoom.textContent = enlarged ? 'Fit to window' : 'Larger view';
+    if (figurePane) {
+      figurePane.scrollLeft = 0; figurePane.scrollTop = 0;
+      figurePane.setAttribute('aria-label', enlarged
+        ? 'Enlarged figure. Scroll horizontally or vertically to inspect details.'
+        : 'Figure overview. Use Larger view to inspect details.');
+    }
+  }
+  document.querySelectorAll('.figure-expand').forEach(button => button.addEventListener('click', () => {
+    const image = button.querySelector('img');
+    const figure = button.closest('.blog-figure');
+    if (!figureDialog || !figureImage || !image || !figure) return;
+    figureOpener = button;
+    figureTitle.textContent = `Fig. ${figure.id.replace('fig-', '')}`;
+    const caption = figure.querySelector('figcaption')?.cloneNode(true);
+    caption?.querySelectorAll('.katex-mathml').forEach(node => node.remove());
+    figureCaption.textContent = caption?.textContent.trim() || '';
+    figureImage.src = image.currentSrc || image.src;
+    figureImage.alt = image.alt;
+    setFigureZoom(matchMedia('(max-width: 650px)').matches);
+    figureDialog.showModal();
+    document.body.classList.add('figure-lightbox-open');
+  }));
+  figureZoom?.addEventListener('click', () => setFigureZoom(figureZoom.getAttribute('aria-pressed') !== 'true'));
+  figureDialog?.querySelector('.figure-lightbox-close')?.addEventListener('click', () => figureDialog.close());
+  figureDialog?.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const focusable = [...figureDialog.querySelectorAll('button, [tabindex="0"]')]
+      .filter(element => !element.disabled && element.getClientRects().length);
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault(); last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault(); first?.focus();
+    }
+  });
+  figureDialog?.addEventListener('click', event => {
+    const bounds = figureDialog.getBoundingClientRect();
+    if (event.target === figureDialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) figureDialog.close();
+  });
+  figureDialog?.addEventListener('close', () => {
+    document.body.classList.remove('figure-lightbox-open');
+    figureImage?.removeAttribute('src');
+    figureOpener?.focus({ preventScroll: true });
+    figureOpener = undefined;
+  });
   function updatePosition() {
     document.body.classList.toggle('is-scrolled', scrollY > 135);
     let active = activeView === 'article' ? sections[0]?.id : undefined;
