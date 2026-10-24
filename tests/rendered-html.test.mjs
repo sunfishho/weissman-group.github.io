@@ -18,6 +18,7 @@ test("exports the CK password screen without plaintext article content", async (
   assert.match(html, /Our journey through the Courtade-Kumar conjecture/);
   assert.doesNotMatch(html, /Private research notes/);
   assert.doesNotMatch(html, /Research notes · 2026/);
+  assert.equal((html.match(/class="brand-dash">–<\/span>/g) ?? []).length, 2);
   assert.match(html, /fetch\('article\.enc'/);
   assert.doesNotMatch(html, /<article\b|class="essay"|class="katex"/);
   assert.equal(payload.algorithm, "AES-GCM");
