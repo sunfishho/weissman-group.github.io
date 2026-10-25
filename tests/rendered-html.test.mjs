@@ -21,6 +21,7 @@ test("exports the CK password screen without plaintext article content", async (
   assert.equal((html.match(/class="brand-dash">–<\/span>/g) ?? []).length, 2);
   assert.match(html, /fetch\('article\.enc'/);
   assert.doesNotMatch(html, /<article\b|class="essay"|class="katex"/);
+  assert.equal(payload.version, 2);
   assert.equal(payload.algorithm, "AES-GCM");
   assert.equal(payload.kdf, "PBKDF2");
   assert.equal(payload.hash, "SHA-256");
@@ -47,7 +48,7 @@ test("exports the CK password screen without plaintext article content", async (
 test("copies only the approved encrypted CK runtime files, byte for byte", async () => {
   const source = new URL("../public/ck/", import.meta.url);
   const exported = new URL("ck/", clientRoot);
-  const rootFiles = new Set(["index.html", "article.enc", "styles.css", "blog.js"]);
+  const rootFiles = new Set(["index.html", "article.enc", "styles.css", "blog.js", "home.html", "blog.html", "lean-writeup.html", "prompting.html", "ai-disclosure.html", "edition.css", "style.css", "pilot.css", "lean-writeup.css"]);
   const directories = new Set([
     "assets", "assets/fonts", "assets/katex", "assets/katex/fonts",
   ]);
@@ -60,12 +61,13 @@ test("copies only the approved encrypted CK runtime files, byte for byte", async
       const path = relative + entry.name;
       assert.equal(entry.isSymbolicLink(), false, path);
       if (entry.isDirectory()) {
-        assert.ok(directories.has(path), path);
+        assert.ok(directories.has(path) || /^(vendor|blog-assets)(\/[-a-zA-Z0-9_]+)*$/.test(path), path);
         await verify(path + "/");
       } else {
         assert.ok(entry.isFile(), path);
         assert.ok(
           rootFiles.has(path)
+          || /^(vendor|blog-assets)\/[a-zA-Z0-9_./-]+\.(css|woff2?|ttf|txt)$/.test(path)
           || path === "assets/katex/katex.min.css"
           || path === "assets/katex/LICENSE.txt"
           || /^assets\/fonts\/(inter-latin\.woff2|geist-mono-latin\.woff2|inter-OFL\.txt|geist-mono-OFL\.txt)$/.test(path)
@@ -296,4 +298,16 @@ test("renders the dedicated contact directory", async () => {
   assert.match(contact, /Packard Building/);
   assert.match(contact, /Room 256/);
   assert.match(contact, /Room 259/);
+});
+
+test("protects every CK reading page with the same encrypted-manifest loader", async () => {
+  const pages = ["index.html", "home.html", "blog.html", "lean-writeup.html", "prompting.html", "ai-disclosure.html"];
+  const root = await readFile(new URL("ck/index.html", clientRoot), "utf8");
+  for (const page of pages) {
+    const html = await readFile(new URL(`ck/${page}`, clientRoot), "utf8");
+    assert.equal(html, root, page);
+    assert.match(html, /sessionStorage/);
+    assert.match(html, /payload.version!==2/);
+    assert.doesNotMatch(html, /\/api\/|Edit introduction|Edit AI Usage|const PAPER/);
+  }
 });

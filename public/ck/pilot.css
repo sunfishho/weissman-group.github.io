@@ -1,0 +1,79 @@
+.edge-hit{stroke:transparent;stroke-width:14;fill:none;pointer-events:stroke;cursor:pointer}
+[data-edge]{cursor:pointer;outline:none}[data-edge]:hover .edge,[data-edge]:focus .edge{stroke:var(--blue);stroke-width:3;opacity:1}
+.proof-position{margin:24px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.proof-position h3{margin:0 0 10px}.proof-position p{font-size:.94em;margin:8px 0}.proof-position nav{display:flex;align-items:center;flex-wrap:wrap;gap:5px 9px;margin:14px 0;font:13px/1.6 var(--ui)}.proof-position nav button{color:var(--blue);text-align:left;padding:0}.proof-position nav [aria-current]{font-weight:600}.proof-position .path-note{font:12px/1.5 var(--ui);color:var(--muted)}.path-arrow{color:var(--muted)}
+#neighborhood.active{background:var(--light);color:var(--blue)}
+.midpoint-figure{margin:22px 0}.midpoint-figure svg{display:block;width:100%;height:auto}.midpoint-figure figcaption{font-size:.9em;color:var(--muted)}
+.proof-step{padding:20px 0;border-bottom:1px solid var(--line)}.proof-step h4{display:flex;gap:12px;font:600 19px/1.4 var(--read);margin:0 0 12px}.proof-step h4>span{font:14px/26px var(--ui);border:1px solid var(--line);border-radius:50%;width:27px;height:27px;text-align:center;flex-shrink:0}.proof-step>p{margin:0 0 12px}.proof-step>details{margin:0;border:0;padding:0}.proof-step>details>summary{color:var(--blue)}
+
+.edge-control{fill:var(--paper);stroke:var(--blue);stroke-width:1.5;cursor:pointer}.edge-control:hover,.edge-control:focus{fill:var(--blue);stroke-width:3;outline:none}
+/* A restrained reading surface, with the graph's hierarchy carried by borders. */
+body.dark{--bg:#1f2a30;--paper:#182126;--ink:#e2e8eb;--muted:#a3b2ba;--line:#35454e;--blue:#7ab9df;--light:#243c47;--teal:#79c4ba;--purple:#c2b4d0}
+body.dark header,body.dark .reading-toolbar{background:var(--paper)}
+header{height:64px;gap:22px}main{height:calc(100dvh - 64px)}
+header .mark{color:#e89b60}.brand small{color:var(--muted);letter-spacing:1.2px}.brand strong{font-family:Cambria,Georgia,serif;font-size:21px}
+#search{border-radius:24px;padding:10px 32px 10px 15px;background:var(--bg)}
+.map-toolbar{gap:7px;padding:16px 16px 9px}.map-toolbar button{border-radius:18px;border:1px solid var(--line);font-weight:600;padding:6px 11px}.map-toolbar .segmented{border:0;background:none;padding:0;gap:5px}.segmented button.active,#neighborhood.active{background:#e89b60;border-color:#e89b60;color:#172127}
+.map-caption{padding:2px 20px 16px;max-width:640px}.map-caption p{line-height:1.6}
+.node rect:first-child{fill:var(--paper);stroke:var(--teal);stroke-width:1.5;rx:7}.node.result rect:first-child{fill:var(--paper);stroke:#e89b60;stroke-width:2.5}
+.node.cert rect:first-child,.dark .node.cert rect:first-child{fill:var(--paper);stroke:var(--teal)}
+.node.selected rect:first-child,.node.result.selected rect:first-child{fill:var(--paper);stroke:var(--blue);stroke-width:3.5;filter:drop-shadow(0 0 4px #70b6dd55)}
+.node.result.selected text{fill:var(--ink)}.node.selected text{font-weight:650}.node.dim{opacity:.75}.node .meta{font-size:9px;opacity:.65}.node text{font-size:14px}.section-label{font-size:10px;letter-spacing:.35px}
+.edge{stroke:#84969f;color:#84969f;stroke-width:1.35}.edge.related{stroke:#a8b9c1;color:#a8b9c1;stroke-width:1.7}.edge.dim{opacity:.4}
+.edge-control{r:5;stroke:#84969f;fill:var(--bg);stroke-width:1}.edge-control:hover,.edge-control:focus{r:7;fill:#e89b60;stroke:#e89b60}
+.highlight-connections [data-edge]{opacity:.22}.highlight-connections [data-edge].hover-connection{opacity:1}.highlight-connections .hover-connection .edge{stroke:#e89b60;stroke-width:2.2}
+.map-bottom{padding:13px 18px}.map-foot{padding:12px 18px}.zoom{border-radius:20px}.zoom button{padding:3px 12px}
+#graph-wrap::-webkit-scrollbar{width:7px;height:7px}#graph-wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+article{padding:29px 28px;max-width:78ch}article h2{font-family:Cambria,Georgia,serif;font-size:29px;line-height:1.25;margin-bottom:24px}.tag{border:0;border-radius:12px;background:var(--bg);color:var(--muted);padding:4px 9px}.edit-badge{opacity:.7}
+article h3,.proof-position h3{font:600 11px/1.4 var(--ui);text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.proof-position{border-bottom:0;padding-top:21px;margin-top:26px}.proof-position nav{line-height:1.8}.proof-position .path-note{font-size:11px}
+.strategy-details>summary,.derivation-details>summary,#page-facts>summary{font-weight:600;font-size:13px;letter-spacing:.2px}
+.proof-step h4{color:var(--ink)}.proof-step>p{color:var(--ink)}.proof-step h4>span{border-color:var(--teal);color:var(--teal)}
+@media(max-width:760px){header{height:auto}main{height:calc(100dvh - 147px)}article{padding:24px 20px}}
+@media(max-width:760px){body{display:flex;flex-direction:column;height:100dvh}header,.mobile-tabs{flex-shrink:0}main{flex:1;min-height:0;height:auto}#map-panel{min-height:0}.map-toolbar{padding:12px}.map-caption{padding:4px 15px 12px}.map-bottom,.map-foot{padding:8px 12px}}
+.legend i.result{border:2px solid #e89b60;background:transparent}.legend i.lemma{border:1px solid var(--teal);background:transparent}.legend i.cert{border:1px solid var(--teal);background:var(--teal)}.legend i.extra{border:1px dashed var(--purple);background:transparent}
+.context-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.context-heading h3{margin:0}.context-heading button{font:12px var(--ui);color:var(--blue);padding:3px 8px}
+.focused-map .map-math-title{line-height:19px}.focused-map .node text:not(.meta){font-size:15px}.focused-map .node .meta{font-size:10px}.focused-map .section-label{font:600 10px var(--ui);letter-spacing:.7px}
+.map-toolbar .segmented{margin-right:auto}.map-toolbar #reset,.map-toolbar #hide-map{border-color:transparent;color:var(--muted);font-weight:400}.map-toolbar #reset:hover,.map-toolbar #hide-map:hover{color:var(--ink)}
+.focused-map .node.selected .map-math-title{font-weight:650}.focused-map .map-math-title{white-space:normal;overflow-wrap:break-word}
+
+.proof-position{padding:13px 0;margin-top:16px}.proof-position>summary{font:600 13px var(--ui);letter-spacing:.2px;color:var(--ink)}.context-actions{text-align:right;margin:8px 0 0}.context-actions button{font:12px var(--ui);color:var(--blue);padding:3px 8px}.context-body>p:first-of-type{margin-top:4px}
+
+.result-uses{margin:-8px 0 23px;padding:0 0 14px;border-bottom:1px solid var(--line)}.result-uses h3{margin:0 0 6px}.result-uses .links{gap:4px 14px}
+
+.reader-summary{margin:25px 0 18px}.reader-summary h3{margin:0 0 9px}.reader-summary p{margin:8px 0;font-size:1.02em;line-height:1.7}.dependency-card{margin:18px 0 25px;padding:14px 16px;background:var(--light);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:5px}.dependency-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;align-items:start}.dependency-row+.dependency-row{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.dependency-card h3{margin:3px 0 0;letter-spacing:.4px;font-size:10px}.dependency-card .links{gap:6px}.dependency-card .links button{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:4px 7px;text-align:left;line-height:1.5}.dependency-card .links button:hover{border-color:var(--blue);text-decoration:none}.statement-heading{margin:26px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+
+/* The drawing carries direction through position and arrowheads, with controls shown on focus. */
+.edge{stroke-linecap:round;stroke-linejoin:round}.edge-control{fill:transparent;stroke:transparent;r:6}.edge-control:hover,.edge-control:focus{fill:var(--blue);stroke:var(--paper);stroke-width:2;r:6}.edge.dim{opacity:.5}.node.dim{opacity:.86}.node.selected rect:first-child{filter:drop-shadow(0 0 5px #70b6dd44)}
+.result-metadata{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.result-metadata .tag{display:inline-flex;align-items:center;font:11px/1.4 var(--mono);padding:4px 9px;border:0;border-radius:12px}
+.result-source-links{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0;max-width:100%}
+.result-source-links a{text-decoration:none;color:var(--teal);background:var(--light)}
+.result-source-links a:hover,.result-source-links a:focus-visible{color:var(--ink);border-color:var(--teal);text-decoration:underline;text-underline-offset:3px}
+
+.certificate-guide-link{display:inline-block;line-height:1.5}
+.proof-introduction{margin:24px 0 18px;padding-top:18px;border-top:1px solid var(--line)}
+.proof-introduction h3{margin:0 0 12px}
+.proof-introduction p{margin:8px 0}
+.certificate-guide-entry{margin:8px 0 14px;font:12px/1.5 var(--ui)}.certificate-guide-entry a{color:var(--blue);text-underline-offset:3px}
+.guide-overlay{position:fixed;inset:0;max-width:none;max-height:none;width:100%;height:100dvh;margin:0;padding:0;border:0;background:var(--paper);color:var(--ink)}
+.guide-overlay[open]{display:flex;flex-direction:column}.guide-overlay iframe{border:0;width:100%;flex:1;min-height:0;background:white}
+.guide-toolbar{display:flex;flex-wrap:wrap;gap:12px;padding:9px 18px;border-bottom:1px solid var(--line);font-family:var(--ui)}
+.guide-toolbar button{font:inherit}.auxiliary-open{overflow:hidden}
+
+.node.result.selected .map-math-title{color:var(--ink)}
+
+/* Certificates differ in both fill and border pattern from supporting results. */
+:root{--certificate-fill:#f0e9f7}
+body.dark{--certificate-fill:#312a3c}
+.node.cert rect:first-child,.dark .node.cert rect:first-child{fill:var(--certificate-fill);stroke:var(--purple);stroke-width:1.8;stroke-dasharray:6 3}
+.node.cert.selected rect:first-child{stroke:var(--blue);stroke-width:3.5}
+.legend i{width:12px;height:9px}
+.legend i.cert{background:var(--certificate-fill);border:1.8px dashed var(--purple)}
+
+/* Give the certificate explanation a distinct, prominent entry point. */
+.certificate-guide-entry{margin:14px 0 20px;font:600 14px/1.5 var(--ui)}
+.certificate-guide-entry a{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 16px;border:1px solid var(--blue);border-left:4px solid var(--blue);border-radius:5px;background:var(--light);color:var(--blue);text-decoration:none}
+.certificate-guide-entry a::after{content:"→";font-size:21px;font-weight:400;flex-shrink:0}
+.certificate-guide-entry a:hover{background:var(--paper);text-decoration:underline;text-underline-offset:3px}
+.certificate-guide-entry a:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
