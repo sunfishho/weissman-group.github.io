@@ -42,8 +42,18 @@ navigation link. The password and noindex policy have not changed.
 obsolete working-draft paragraph without removing the calculations toggle,
 and hides the remaining author-only notation control. It also clarifies the
 certificate guide's recorded-verification scope and makes small prose repairs.
-The historical prompt and the authors' AI-role/runtime statements are retained.
+The historical prompt and the authors' runtime statement are retained. The
+approved AI attribution now concerns discovery of the new proof argument, not
+all mathematical content presented in the project. A visible paragraph near
+the blog opening explains the contextual links into the visual proof map.
 The regression suite exercises both default and explicit visual routing.
+
+The final editorial pass also applies `ck-proof-copyedits.mjs` to the reader's
+structured proof data. It aligns 13 scoped dependency fields with the current
+fixed-mean/comparison-point notation and repairs residual-name/grammar slips,
+including saved prose overrides. It does not change certificate data, graph
+dependencies, source revisions, or the formal proof. Focused tests cover
+simultaneous TeX renaming, grouped limits, override precedence, and idempotence.
 
 The original `ck_blog` Markdown/build is an earlier local authoring source.
 Do not rebuild over the merged six-page publication from that source alone,

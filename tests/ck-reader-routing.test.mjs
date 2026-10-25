@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { ckReaderDestination, refineCKPages, entryRouter } from '../tools/ck-reader-refinements.mjs';
+import { ckReaderDestination, refineCKPages, entryRouter, visualProofIntro } from '../tools/ck-reader-refinements.mjs';
 
 test('CK defaults to the blog, including legacy article links', () => {
   for (const query of ['', '?view=article', '?view=home']) {
@@ -35,5 +35,20 @@ test('publication refinements are idempotent and preserve proof content', () => 
   assert.doesNotMatch(updated['blog.html'], /Matthew Ho \(repository maintainer\)/);
   assert.match(updated['blog.html'], /<\/a> Our GitHub source repository, frozen proof snapshot/);
   for (const page of Object.values(updated)) assert.match(page, /unchanged mathematics/);
+  assert.deepEqual(refineCKPages(updated), updated);
+});
+
+test('the opening points to the proof map and AI attribution concerns the new argument', () => {
+  const router = '<script>if(!location.hash&&!new URLSearchParams(location.search).has("guide"))location.replace("home.html");</script>';
+  const pages = Object.fromEntries(['index', 'home', 'blog', 'lean-writeup', 'prompting', 'ai-disclosure'].map(name => [name + '.html', '<head></head>']));
+  pages['index.html'] = '<head>' + router + '</head>';
+  pages['blog.html'] += '<div class="essay-opening"><p>Opening explanation.</p><details class="reading-guide">Guide.</details></div>';
+  pages['ai-disclosure.html'] += '<p>GPT 5.6 Sol was used to discover the proof of the Courtade-Kumar conjecture that this project explores (and is therefore responsible for discovery of the mathematical content in this project), and GPT 6 Astra was used to write the Lean formalization.</p>';
+  const updated = refineCKPages(pages);
+  assert.ok(updated['blog.html'].includes(visualProofIntro));
+  assert.ok(updated['blog.html'].indexOf(visualProofIntro) < updated['blog.html'].indexOf('<details class="reading-guide">'));
+  assert.equal(updated['blog.html'].split('class="visual-proof-intro"').length - 1, 1);
+  assert.match(updated['ai-disclosure.html'], /discover the new proof argument/);
+  assert.doesNotMatch(updated['ai-disclosure.html'], /discovery of the mathematical content/);
   assert.deepEqual(refineCKPages(updated), updated);
 });
