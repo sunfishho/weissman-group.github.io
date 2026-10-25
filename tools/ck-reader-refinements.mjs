@@ -1,4 +1,4 @@
-// Shared by the encrypted publisher and its regression tests. No complete page
+// Shared by the public reader publisher and its regression tests. No complete page
 // or password is stored here. Explicit proof-node and guide links remain available.
 import { refineCKProofPage } from './ck-proof-copyedits.mjs';
 

@@ -5,33 +5,27 @@ import test from "node:test";
 const clientRoot = new URL("../dist/client/", import.meta.url);
 const appRoot = new URL("../app/", import.meta.url);
 
-test("exports the CK password screen without plaintext article content", async () => {
-  const html = await readFile(new URL("ck/index.html", clientRoot), "utf8");
-  const payload = JSON.parse(
-    await readFile(new URL("ck/article.enc", clientRoot), "utf8"),
-  );
-
-  assert.match(html, /<form[^>]+id="unlock-form"/);
-  assert.match(html, /type="password"/);
-  assert.match(html, /name="robots" content="noindex, nofollow, noarchive"/);
-  assert.match(html, /class="wordmark" href="\.\/"/);
-  assert.match(html, /Our journey through the Courtade-Kumar conjecture/);
-  assert.doesNotMatch(html, /Private research notes/);
-  assert.doesNotMatch(html, /Research notes · 2026/);
-  assert.equal((html.match(/class="brand-dash">–<\/span>/g) ?? []).length, 2);
-  assert.match(html, /fetch\('article\.enc'/);
-  assert.doesNotMatch(html, /<article\b|class="essay"|class="katex"/);
-  assert.equal(payload.version, 2);
-  assert.equal(payload.algorithm, "AES-GCM");
-  assert.equal(payload.kdf, "PBKDF2");
-  assert.equal(payload.hash, "SHA-256");
-  assert.equal(payload.iterations, 310_000);
-  assert.equal(Buffer.from(payload.salt, "base64").length, 32);
-  assert.equal(Buffer.from(payload.iv, "base64").length, 12);
-  assert.ok(Buffer.from(payload.data, "base64").length > 100_000);
-  assert.deepEqual(Object.keys(payload).sort(), [
-    "algorithm", "data", "hash", "iterations", "iv", "kdf", "salt", "version",
+test("exports the public CK blog and preserves the blog-first entry router", async () => {
+  const [entry, blog] = await Promise.all([
+    readFile(new URL("ck/index.html", clientRoot), "utf8"),
+    readFile(new URL("ck/blog.html", clientRoot), "utf8"),
   ]);
+
+  assert.match(entry, /<script data-ck-entry-router>/);
+  assert.match(entry, /location\.replace\(ckDestination\)/);
+  assert.match(entry, /blog\.html/);
+  assert.match(entry, /const PAPER=/);
+  assert.match(entry, /id="graph"/);
+  assert.match(blog, /<article id="essay" class="essay"/);
+  assert.match(blog, /id="section-1"/);
+  assert.match(blog, /class="visual-proof-intro"/);
+  assert.match(blog, /class="design-credit"/);
+  assert.match(blog, /A Bit, Too Many Proofs\?/);
+  for (const name of ["Matthew Ho", "Abhiram Gorle", "Tsachy Weissman"]) {
+    assert.ok(blog.includes(name), name);
+  }
+  assert.doesNotMatch(blog, /Private research notes|Research notes · 2026/);
+  await assert.rejects(access(new URL("ck/article.enc", clientRoot)), { code: "ENOENT" });
 
   await Promise.all([
     access(new URL("ck/styles.css", clientRoot)),
@@ -45,10 +39,10 @@ test("exports the CK password screen without plaintext article content", async (
   ]);
 });
 
-test("copies only the approved encrypted CK runtime files, byte for byte", async () => {
+test("copies only the approved public CK runtime files, byte for byte", async () => {
   const source = new URL("../public/ck/", import.meta.url);
   const exported = new URL("ck/", clientRoot);
-  const rootFiles = new Set(["index.html", "article.enc", "styles.css", "blog.js", "home.html", "blog.html", "lean-writeup.html", "prompting.html", "ai-disclosure.html", "edition.css", "style.css", "pilot.css", "lean-writeup.css"]);
+  const rootFiles = new Set(["index.html", "styles.css", "blog.js", "home.html", "blog.html", "lean-writeup.html", "prompting.html", "ai-disclosure.html", "edition.css", "style.css", "pilot.css", "lean-writeup.css"]);
   const directories = new Set([
     "assets", "assets/fonts", "assets/katex", "assets/katex/fonts",
   ]);
@@ -300,14 +294,16 @@ test("renders the dedicated contact directory", async () => {
   assert.match(contact, /Room 259/);
 });
 
-test("protects every CK reading page with the same encrypted-manifest loader", async () => {
+test("publishes every CK reading page without a password or decryption dependency", async () => {
   const pages = ["index.html", "home.html", "blog.html", "lean-writeup.html", "prompting.html", "ai-disclosure.html"];
-  const root = await readFile(new URL("ck/index.html", clientRoot), "utf8");
   for (const page of pages) {
     const html = await readFile(new URL(`ck/${page}`, clientRoot), "utf8");
-    assert.equal(html, root, page);
-    assert.match(html, /sessionStorage/);
-    assert.match(html, /payload.version!==2/);
-    assert.doesNotMatch(html, /\/api\/|Edit introduction|Edit AI Usage|const PAPER/);
+    assert.match(html, /<!doctype html>/i, page);
+    assert.match(html, /<main\b/, page);
+    assert.match(html, /href="blog\.html"/, page);
+    assert.match(html, /href="\.\/#ck"/, page);
+    assert.match(html, /<meta name="robots" content="[^\"]*\bnoindex\b[^\"]*"/, page);
+    assert.doesNotMatch(html, /unlock-form|type=["']password["']|article\.enc|ck-reader-key-v2|crypto\.subtle\.decrypt/, page);
+    assert.doesNotMatch(html, /Edit introduction|Edit AI Usage/, page);
   }
 });

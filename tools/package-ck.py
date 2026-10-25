@@ -1,18 +1,16 @@
-"""Package a local CK reader snapshot without publishing drafts or server data.
-Requires: pip install cryptography
+"""Package a public CK reader snapshot without publishing drafts or server data.
 Usage: python tools/package-ck.py /path/to/ck-visual-paper-pilot
-The password is requested interactively (or read from CK_PUBLICATION_PASSWORD).
+The reviewed reading pages are public and require no password.
 """
-import argparse,base64,getpass,html,json,os,re,shutil,subprocess,urllib.request
+import argparse,base64,html,json,re,shutil,subprocess,urllib.request
 from pathlib import Path
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-import hashlib
 
 args=argparse.ArgumentParser(description=__doc__)
 args.add_argument('source',type=Path)
 args.add_argument('--origin',default='http://localhost:8768')
 a=args.parse_args();src=a.source/'dist';out=Path(__file__).resolve().parents[1]/'public/ck'
-password=os.environ.get('CK_PUBLICATION_PASSWORD') or getpass.getpass('Existing CK publication password: ')
+if (out/'article.enc').exists():
+ raise RuntimeError('Archive the obsolete encrypted reader privately before packaging the public site.')
 def api(path):return json.load(urllib.request.urlopen(a.origin+'/api/'+path))
 snapshots={name:api(name) for name in ['edits','writeup','prompting','disclosure']}
 def js(value):return json.dumps(value,ensure_ascii=False).replace('<',r'\u003c')
@@ -59,7 +57,7 @@ for name in ['home.html','blog.html','lean-writeup.html','prompting.html','ai-di
  page=page.replace('</head>','<style>'+readonly+'</style></head>')
  page=page.replace('</body>',''.join(scripts)+'</body>')
  pages[name]=page
-# Fonts, licenses and styles are the only unencrypted imported assets.
+# Fonts, licenses and styles are the only additional imported assets.
 for path in src.rglob('*'):
  if path.is_file() and (path.suffix in ['.css','.woff','.woff2','.ttf'] or ('vendor' in path.parts or 'blog-assets' in path.parts) and ('LICENSE' in path.name.upper() or 'OFL' in path.name.upper())):
   rel=path.relative_to(src);target=out/rel;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(path,target)
@@ -67,20 +65,19 @@ for path in src.rglob('*'):
 # links, and apply the reader-only publication refinements on every repack.
 refiner=Path(__file__).with_name('ck-reader-refinements.mjs')
 pages=json.loads(subprocess.run(['node',str(refiner),'--json'],input=json.dumps(pages),text=True,capture_output=True,check=True).stdout)
+public_reader=Path(__file__).with_name('ck-public-pages.mjs')
+pages=json.loads(subprocess.run(['node',str(public_reader),'--json'],input=json.dumps(pages),text=True,capture_output=True,check=True).stdout)
 edition=out/'edition.css'
 mobile_rule='@media(max-width:380px){.ck-primary{flex-wrap:wrap;gap:0 12px;font-size:12px;max-width:100%;min-width:0;flex-shrink:1}}'
 if mobile_rule not in edition.read_text():edition.write_text(edition.read_text()+'\n'+mobile_rule+'\n')
-plain=js(pages).encode();salt=os.urandom(32);iv=os.urandom(12);iterations=310000
-key=hashlib.pbkdf2_hmac('sha256',password.encode(),salt,iterations,32)
-data=AESGCM(key).encrypt(iv,plain,None)
-b64=lambda x:base64.b64encode(x).decode()
-payload={'version':2,'algorithm':'AES-GCM','kdf':'PBKDF2','hash':'SHA-256','iterations':iterations,'salt':b64(salt),'iv':b64(iv),'data':b64(data)}
-(out/'article.enc').write_text(json.dumps(payload))
-assert AESGCM(key).decrypt(iv,data,None)==plain
 # Recheck snapshots so a concurrent author edit never silently misses publication.
 for name,value in snapshots.items():
  assert api(name)==value, 'Text changed while packaging. Run the packager again.'
-# Private staging permits local browser checks without committing decrypted content.
+# Publish the same reviewed reader HTML directly, without password loaders.
+for name,page in pages.items():
+ assert 'id="unlock-form"' not in page and 'ck-reader-key-v2' not in page
+ (out/name).write_text(page)
+# Keep a private staging copy for local publication checks.
 stage=a.source/'local-backups/publication-preview';stage.mkdir(parents=True,exist_ok=True)
 for name,page in pages.items():(stage/name).write_text(page)
-print(f'Packaged {len(pages)} read-only pages into {len(data):,} encrypted bytes.')
+print(f'Packaged {len(pages)} public, read-only pages. No password required.')
