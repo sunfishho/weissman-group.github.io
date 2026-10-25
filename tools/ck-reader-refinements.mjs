@@ -49,6 +49,14 @@ export function refineCKPages(input) {
   }
   pages['index.html'] = pages['index.html'].replaceAll('satisfies Here', 'satisfies the derivative identity below. Here');
   pages['blog.html'] = pages['blog.html'].replace(staleEndnote, '');
+  // Repository maintenance is not an authorship statement. Cite the shared
+  // project without inferring research contribution from Git commit ownership.
+  pages['blog.html'] = pages['blog.html'].replace(
+    /(<p id="ref-16" class="reference-item">)([\s\S]*?)(<\/p>)/,
+    (_, open, entry, close) => open + entry
+      .replace('[16] Matthew Ho (repository maintainer). ', '[16] ')
+      .replace('</a> GitHub source repository,', '</a> Our GitHub source repository,') + close,
+  );
   pages['prompting.html'] = pages['prompting.html'].replace(
     'a prompt used for the proof of Crouzeix&#x27;s conjecture',
     'a prompt from a Crouzeix-conjecture proof project',
