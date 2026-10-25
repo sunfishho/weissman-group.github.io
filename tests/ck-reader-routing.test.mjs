@@ -70,10 +70,11 @@ test('one historical sentence follows the opening question without duplicating t
   const pages = Object.fromEntries(['index', 'home', 'blog', 'lean-writeup', 'prompting', 'ai-disclosure'].map(name => [name + '.html', '<head></head>']));
   pages['index.html'] = '<head>' + entryRouter + '</head>';
   const question = 'How much can a noisy string tell us about a single bit computed from the original?';
-  pages['blog.html'] += '<div class="essay-opening"><p>' + question + ' This post explains our proof.</p></div>';
+  pages['blog.html'] += '<link rel="stylesheet" href="blog-assets/styles.css"><div class="essay-opening"><p>' + question + ' This post explains our proof.</p></div>';
   const updated = refineCKPages(pages);
   assert.ok(updated['blog.html'].includes(question + ' ' + problemHistory + ' This post explains'));
   assert.equal(updated['blog.html'].split(problemHistory).length - 1, 1);
+  assert.match(updated['blog.html'], /href="blog-assets\/styles.css\?v=contents-down-columns-20261025"/);
   assert.deepEqual(refineCKPages(updated), updated);
 });
 

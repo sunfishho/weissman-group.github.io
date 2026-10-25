@@ -65,6 +65,9 @@ export function refineCKPages(input) {
   pages['index.html'] = pages['index.html'].replaceAll('satisfies Here', 'satisfies the derivative identity below. Here');
   pages['blog.html'] = pages['blog.html'].replace(staleEndnote, '');
   pages['blog.html'] = pages['blog.html'].replace(
+    'href="blog-assets/styles.css"', 'href="blog-assets/styles.css?v=contents-down-columns-20261025"',
+  );
+  pages['blog.html'] = pages['blog.html'].replace(
     'How much can a noisy string tell us about a single bit computed from the original? This post explains',
     'How much can a noisy string tell us about a single bit computed from the original? ' + problemHistory + ' This post explains',
   );
