@@ -23,6 +23,7 @@ const staleEndnote = '<p>This is a working draft. The section on Lean formalizat
 const writeupPrefix = 'window.CK_PUBLISHED_WRITEUP=';
 const auxiliaryPrefix = 'window.CK_AUXILIARY_PAGES=';
 export const visualProofIntro = '<p class="visual-proof-intro">For a closer look at the mathematics, follow the <a href="./#ck">visual proof map</a>. The <em>In the visual proof</em> links throughout this blog take you directly to the corresponding statements, proofs, and dependencies.</p>';
+export const designCredit = '<p class="design-credit" id="design-credit"><small>The authors drew inspiration for this blog’s layout and presentation from <a href="https://hyperstition.cc/">Hyperstition’s blogs</a>.</small></p>';
 
 function replacePublishedValue(page, prefix, transform) {
   const start = page.indexOf(prefix);
@@ -65,6 +66,12 @@ export function refineCKPages(input) {
     pages['blog.html'] = pages['blog.html'].replace(
       /(<div class="essay-opening"><p>[\s\S]*?<\/p>)/,
       '$1\n' + visualProofIntro,
+    );
+  }
+  if (!pages['blog.html'].includes('id="design-credit"')) {
+    pages['blog.html'] = pages['blog.html'].replace(
+      /(<\/article>\s*<div class="draft-endnote">)/,
+      designCredit + '\n$1',
     );
   }
   pages['ai-disclosure.html'] = pages['ai-disclosure.html'].replace(

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { ckReaderDestination, refineCKPages, entryRouter, visualProofIntro } from '../tools/ck-reader-refinements.mjs';
+import { ckReaderDestination, refineCKPages, entryRouter, visualProofIntro, designCredit } from '../tools/ck-reader-refinements.mjs';
 
 test('CK defaults to the blog, including legacy article links', () => {
   for (const query of ['', '?view=article', '?view=home']) {
@@ -51,4 +51,17 @@ test('the opening points to the proof map and AI attribution concerns the new ar
   assert.match(updated['ai-disclosure.html'], /discover the new proof argument/);
   assert.doesNotMatch(updated['ai-disclosure.html'], /discovery of the mathematical content/);
   assert.deepEqual(refineCKPages(updated), updated);
+});
+
+test('the blog ends with a single linked design-inspiration credit', () => {
+  const router = '<script>if(!location.hash&&!new URLSearchParams(location.search).has("guide"))location.replace("home.html");</script>';
+  const pages = Object.fromEntries(['index', 'home', 'blog', 'lean-writeup', 'prompting', 'ai-disclosure'].map(name => [name + '.html', '<head></head>']));
+  pages['index.html'] = '<head>' + router + '</head>';
+  pages['blog.html'] = '<article><section id="references">References and source guide.</section></article>\n<div class="draft-endnote">Calculations toggle</div>';
+  const updated = refineCKPages(pages);
+  assert.equal(updated['blog.html'].split('id="design-credit"').length - 1, 1);
+  assert.ok(updated['blog.html'].includes(designCredit));
+  assert.ok(updated['blog.html'].indexOf(designCredit) > updated['blog.html'].indexOf('</section>'));
+  assert.ok(updated['blog.html'].indexOf(designCredit) < updated['blog.html'].indexOf('</article>'));
+  assert.equal(refineCKPages(updated)['blog.html'], updated['blog.html']);
 });
