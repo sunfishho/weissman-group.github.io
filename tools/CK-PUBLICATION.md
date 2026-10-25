@@ -28,3 +28,25 @@ are maintained separately from the content packager.
 The publication uses the source project's current text, including the site's
 attribution to Armstrong, Kuusi, and Loher's visual companion. The group site's
 other pages and publication workflow are unchanged.
+
+## Reader entry and review refinements (25 October 2026)
+
+Ordinary `/ck/` and `/ck/index.html` visits open `blog.html` after unlocking.
+Explicit proof-node hashes such as `/ck/#ck`, `/ck/#top`, and `/ck/#lr`, and
+`?guide=...` links still open the visual proof. Legacy article-section, figure,
+reference, and provenance-footnote fragments are forwarded to the blog.
+The wordmark returns to the blog, with the visual proof available from its
+navigation link. The password and noindex policy have not changed.
+
+`ck-reader-refinements.mjs` applies these rules on every repack, removes the
+obsolete working-draft paragraph without removing the calculations toggle,
+and hides the remaining author-only notation control. It also clarifies the
+certificate guide's recorded-verification scope and makes small prose repairs.
+The historical prompt and the authors' AI-role/runtime statements are retained.
+The regression suite exercises both default and explicit visual routing.
+
+The original `ck_blog` Markdown/build is an earlier local authoring source.
+Do not rebuild over the merged six-page publication from that source alone,
+because doing so would discard the newer visual proof and supporting material.
+Source-only changes and encrypted publication snapshots must be reconciled
+before running the publication process again.

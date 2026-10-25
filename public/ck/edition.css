@@ -49,3 +49,4 @@
 html:has(body.ck-blog){scroll-padding-top:120px}
 .ck-blog .site-header{position:sticky;top:0;z-index:40;background:var(--paper);padding-top:20px;padding-bottom:20px}
 @media(max-width:760px){html:has(body.ck-blog){scroll-padding-top:160px}}
+@media(max-width:380px){.ck-primary{flex-wrap:wrap;gap:0 12px;font-size:12px;max-width:100%;min-width:0;flex-shrink:1}}
