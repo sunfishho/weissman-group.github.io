@@ -65,6 +65,10 @@ for path in src.rglob('*'):
 # links, and apply the reader-only publication refinements on every repack.
 refiner=Path(__file__).with_name('ck-reader-refinements.mjs')
 pages=json.loads(subprocess.run(['node',str(refiner),'--json'],input=json.dumps(pages),text=True,capture_output=True,check=True).stdout)
+for css_name in ['styles.css','blog-assets/styles.css']:
+ css_file=out/css_name
+ if css_file.exists():
+  css_file.write_text(subprocess.run(['node',str(refiner),'--css'],input=css_file.read_text(),text=True,capture_output=True,check=True).stdout)
 public_reader=Path(__file__).with_name('ck-public-pages.mjs')
 pages=json.loads(subprocess.run(['node',str(public_reader),'--json'],input=json.dumps(pages),text=True,capture_output=True,check=True).stdout)
 edition=out/'edition.css'

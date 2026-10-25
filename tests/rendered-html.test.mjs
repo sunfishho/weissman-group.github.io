@@ -91,6 +91,18 @@ test("ships the accessible CK figure lightbox runtime", async () => {
   assert.match(styles, /\.figure-expand:focus-visible/);
 });
 
+test("shows the problem's history immediately and keeps contents in numerical reading order", async () => {
+  const blog = await readFile(new URL("ck/blog.html", clientRoot), "utf8");
+  const styles = await readFile(new URL("ck/blog-assets/styles.css", clientRoot), "utf8");
+  const opening = blog.match(/<div class="essay-opening"><p>([\s\S]*?)<\/p>/)?.[1];
+  assert.match(opening, /^How much can a noisy string[^?]*\? First posed in 2013,/);
+  assert.match(opening, /remained open for more than thirteen years, until the recent proofs in 2026/);
+  const contents = blog.match(/<ul class="toc-main">([\s\S]*?)<\/ul>/)?.[1];
+  assert.deepEqual([...contents.matchAll(/class="toc-number">(\d+)\./g)].map(match => Number(match[1])), [1, 2, 3, 4, 5, 6, 7, 8]);
+  assert.match(styles, /grid-template-rows: repeat\(4, auto\); grid-auto-flow: column/);
+  assert.match(styles, /grid-template-rows: none; grid-auto-flow: row/);
+});
+
 async function readRoute(route = "") {
   const filename = route ? `${route}.html` : "index.html";
   return readFile(new URL(filename, clientRoot), "utf8");

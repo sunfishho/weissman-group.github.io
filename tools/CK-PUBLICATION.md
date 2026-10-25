@@ -53,6 +53,11 @@ all mathematical content presented in the project. A visible paragraph near
 the blog opening explains the contextual links into the visual proof map.
 The regression suite exercises both default and explicit visual routing.
 
+The opening includes one sentence recording that the conjecture was posed in
+2013 and remained open until the recent 2026 proofs. The desktop contents flow
+down items 1–4 on the left and 5–8 on the right, preserving DOM/keyboard order.
+Mobile readers see one sequential column. The packager reapplies both changes.
+
 The final editorial pass also applies `ck-proof-copyedits.mjs` to the reader's
 structured proof data. It aligns 13 scoped dependency fields with the current
 fixed-mean/comparison-point notation and repairs residual-name/grammar slips,

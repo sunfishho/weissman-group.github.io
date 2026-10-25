@@ -24,6 +24,17 @@ const writeupPrefix = 'window.CK_PUBLISHED_WRITEUP=';
 const auxiliaryPrefix = 'window.CK_AUXILIARY_PAGES=';
 export const visualProofIntro = '<p class="visual-proof-intro">For a closer look at the mathematics, follow the <a href="./#ck">visual proof map</a>. The <em>In the visual proof</em> links throughout this blog take you directly to the corresponding statements, proofs, and dependencies.</p>';
 export const designCredit = '<p class="design-credit" id="design-credit"><small>The authors drew inspiration for this blog’s layout and presentation from <a href="https://hyperstition.cc/">Hyperstition’s blogs</a>.</small></p>';
+export const problemHistory = 'First posed in 2013, the Courtade–Kumar conjecture remained open for more than thirteen years, until the recent proofs in 2026. <a href="#ref-1" class="citation" aria-label="Reference 1">[1]</a> <a href="#ref-10" class="citation" aria-label="Reference 10">[10]</a>';
+
+export function refineCKBlogStyles(css) {
+  return css.replace(
+    '.toc-nav .toc-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }',
+    '.toc-nav .toc-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); grid-auto-flow: column; column-gap: 28px; }',
+  ).replace(
+    '.toc-nav .toc-main { grid-template-columns: minmax(0, 1fr); }',
+    '.toc-nav .toc-main { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-flow: row; }',
+  );
+}
 
 function replacePublishedValue(page, prefix, transform) {
   const start = page.indexOf(prefix);
@@ -53,6 +64,10 @@ export function refineCKPages(input) {
   }
   pages['index.html'] = pages['index.html'].replaceAll('satisfies Here', 'satisfies the derivative identity below. Here');
   pages['blog.html'] = pages['blog.html'].replace(staleEndnote, '');
+  pages['blog.html'] = pages['blog.html'].replace(
+    'How much can a noisy string tell us about a single bit computed from the original? This post explains',
+    'How much can a noisy string tell us about a single bit computed from the original? ' + problemHistory + ' This post explains',
+  );
   pages['blog.html'] = pages['blog.html'].replace(
     /(?<!,) and is differentiable in the interior\./, ', and is differentiable in the interior.',
   ).replace(
@@ -125,4 +140,10 @@ if (process.argv.includes('--json')) {
   let input = '';
   for await (const chunk of process.stdin) input += chunk;
   process.stdout.write(JSON.stringify(refineCKPages(JSON.parse(input))));
+}
+
+if (process.argv.includes('--css')) {
+  let input = '';
+  for await (const chunk of process.stdin) input += chunk;
+  process.stdout.write(refineCKBlogStyles(input));
 }

@@ -52,7 +52,7 @@ details > summary::-webkit-details-marker { display: none; }
 .plus::after { transform: rotate(90deg); }
 details[open] > summary > .plus::after { transform: rotate(0deg); }
 .toc-nav ul { padding: 0; margin: 0; list-style: none; }
-.toc-nav .toc-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+.toc-nav .toc-main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); grid-auto-flow: column; column-gap: 28px; }
 .toc-main > li { margin: 0; min-width: 0; border-top: 1px solid var(--faint-rule); }
 .toc-main > li > a { display: flex; align-items: flex-start; gap: 14px; min-height: 56px; padding: 10px 0 12px; text-decoration: none; font: 400 12px/18px var(--sans); text-transform: uppercase; color: var(--muted); letter-spacing: normal; }
 .toc-main > li > a:hover, .toc-nav a[aria-current="true"] { color: #000; }
@@ -214,7 +214,7 @@ details[open] > summary > .plus::after { transform: rotate(0deg); }
   .certificate-appendix { margin-top: 36px; }
   .chaptering { margin-bottom: 32px; }
   .chaptering > h2 { font-size: 11px; padding-bottom: 14px; }
-  .toc-nav .toc-main { grid-template-columns: minmax(0, 1fr); }
+  .toc-nav .toc-main { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-flow: row; }
   .toc-main > li > a { min-height: 44px; gap: 12px; padding: 10px 0; font-size: 11px; line-height: 17px; }
   .toc-number { width: 24px; font-size: 18px; line-height: 20px; }
   .toc-details > summary { font-size: 11px; }
