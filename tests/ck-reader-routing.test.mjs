@@ -2,10 +2,12 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { ckReaderDestination, refineCKPages, refineCKBlogStyles, entryRouter, visualProofIntro, designCredit, problemHistory } from '../tools/ck-reader-refinements.mjs';
 
-test('CK defaults to the blog, including legacy article links', () => {
-  for (const query of ['', '?view=article', '?view=home']) {
-    assert.equal(ckReaderDestination(query, ''), 'blog.html');
+test('CK defaults to the landing page and preserves legacy article links', () => {
+  for (const query of ['', '?view=home']) {
+    assert.equal(ckReaderDestination(query, ''), 'home.html');
   }
+  assert.equal(ckReaderDestination('?view=article', ''), 'blog.html');
+  assert.equal(ckReaderDestination('?utm_source=colleague', ''), 'home.html?utm_source=colleague');
   for (const hash of ['#section-3', '#section-6-onto-the-computer-assisted-proof', '#fig-12', '#references', '#ref-16', '#contents', '#contents-heading', '#references-heading', '#development-note', '#development-note-reference']) {
     assert.equal(ckReaderDestination('', hash), 'blog.html' + hash);
   }
@@ -31,7 +33,7 @@ test('publication refinements are idempotent and preserve proof content', () => 
   assert.ok(updated['index.html'].includes(entryRouter));
   assert.doesNotMatch(updated['blog.html'], /This is a working draft/);
   assert.match(updated['blog.html'], /Expand the calculations/);
-  assert.match(updated['blog.html'], /href="blog.html"/);
+  assert.match(updated['blog.html'], /href="home.html"/);
   assert.doesNotMatch(updated['blog.html'], /Matthew Ho \(repository maintainer\)/);
   assert.match(updated['blog.html'], /<\/a> Our GitHub source repository, frozen proof snapshot/);
   for (const page of Object.values(updated)) assert.match(page, /unchanged mathematics/);

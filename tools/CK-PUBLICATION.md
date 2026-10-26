@@ -36,11 +36,13 @@ other pages and publication workflow are unchanged.
 
 ## Reader entry and review refinements (25 October 2026)
 
-Ordinary `/ck/` and `/ck/index.html` visits open `blog.html` immediately.
+Ordinary `/ck/` and `/ck/index.html` visits open the shared landing page at `home.html`.
+The blog and visual proof appear first, followed by AI Usage, the Lean certificate
+writeup, and Prompting.
 Explicit proof-node hashes such as `/ck/#ck`, `/ck/#top`, and `/ck/#lr`, and
 `?guide=...` links still open the visual proof. Legacy article-section, figure,
 reference, and provenance-footnote fragments are forwarded to the blog.
-The wordmark returns to the blog, with the visual proof available from its
+The wordmark returns to the landing page, with the visual proof available from its
 navigation link. No password is required. The noindex policy is retained.
 
 `ck-reader-refinements.mjs` applies these rules on every repack, removes the

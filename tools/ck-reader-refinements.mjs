@@ -11,7 +11,8 @@ export function ckReaderDestination(search, hash) {
   if (hash && !articleFragment && view !== 'article' && view !== 'home') return null;
   query.delete('view');
   const suffix = query.toString();
-  return 'blog.html' + (suffix ? '?' + suffix : '') + hash;
+  const page = view === 'article' || articleFragment ? 'blog.html' : 'home.html';
+  return page + (suffix ? '?' + suffix : '') + hash;
 }
 
 export const entryRouter = '<script data-ck-entry-router>const ckDestination=('
@@ -51,8 +52,9 @@ export function refineCKPages(input) {
   for (const name of ['index.html', 'home.html', 'blog.html', 'lean-writeup.html', 'prompting.html', 'ai-disclosure.html']) {
     if (typeof pages[name] !== 'string') throw new Error('Missing CK reader page: ' + name);
     pages[name] = pages[name]
-      .replaceAll('href="home.html"', 'href="blog.html"')
-      .replaceAll('aria-label="Courtade–Kumar research notes home"', 'aria-label="Return to the Courtade–Kumar blog"')
+      .replace(/(<a class="(?:wordmark|brand)" href=")blog\.html(")/g, '$1home.html$2')
+      .replaceAll('aria-label="Return to the Courtade–Kumar blog"', 'aria-label="Courtade–Kumar home"')
+      .replaceAll('aria-label="Courtade–Kumar research notes home"', 'aria-label="Courtade–Kumar home"')
       .replaceAll('[data-edit-fact],[data-edit-context],.sidebar-tabs', '[data-edit-fact],[data-edit-context],[data-edit-notation],.sidebar-tabs');
   }
   if (pages['index.html'].includes(oldRouter)) {
@@ -136,6 +138,7 @@ export function refineCKPages(input) {
   if (pages['index.html'].includes('const PAPER=')) {
     pages['index.html'] = refineCKProofPage(pages['index.html']);
   }
+  pages['home.html'] = pages['home.html'].replace(/<section class="ck-supporting[\s\S]*?(?=<p class="ck-home-authors">)/, `<section class="ck-supporting ck-usage" aria-labelledby="usage-heading"><h2 id="usage-heading">AI Usage</h2><div><a href="ai-disclosure.html">Read the AI Usage statement →</a><p>How AI tools were used in the mathematical work, Lean formalization, and writing.</p></div></section><section class="ck-supporting" aria-labelledby="lean-heading"><h2 id="lean-heading">Lean certificate work</h2><div><a href="lean-writeup.html">Read the Lean certificate writeup →</a><p>What each certificate family proves and how the certificates are constructed and checked in Lean.</p></div></section><section class="ck-supporting" aria-labelledby="prompt-heading"><h2 id="prompt-heading">Prompting</h2><div><a href="prompting.html">Read the original prompt →</a><p>The starting prompt given to Sol, with context about the subsequent instructions.</p></div></section>`);
   return pages;
 }
 

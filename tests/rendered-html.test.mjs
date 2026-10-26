@@ -5,7 +5,7 @@ import test from "node:test";
 const clientRoot = new URL("../dist/client/", import.meta.url);
 const appRoot = new URL("../app/", import.meta.url);
 
-test("exports the public CK blog and preserves the blog-first entry router", async () => {
+test("exports the public CK blog and preserves landing-page and direct proof routing", async () => {
   const [entry, blog] = await Promise.all([
     readFile(new URL("ck/index.html", clientRoot), "utf8"),
     readFile(new URL("ck/blog.html", clientRoot), "utf8"),
