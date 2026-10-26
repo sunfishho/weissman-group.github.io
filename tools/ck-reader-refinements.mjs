@@ -47,11 +47,28 @@ function replacePublishedValue(page, prefix, transform) {
   return page.slice(0, start + prefix.length) + encoded + page.slice(end);
 }
 
+function sharedNavigation(page, name) {
+  const links = [['home.html', 'Home'], ['blog.html', 'Blog post'], ['./#ck', 'Visual proof'], ['prompting.html', 'Prompting'], ['ai-disclosure.html', 'AI Usage']];
+  const active = name === 'index.html' ? './#ck' : name;
+  const nav = '<nav class="ck-primary" aria-label="Read the Courtade–Kumar work">' + links.map(([href, label]) => `<a href="${href}"${href === active ? ' aria-current="page"' : ''}>${label}</a>`).join('') + '</nav>';
+  page = page.replace(/<nav class="ck-primary"[^>]*>[\s\S]*?<\/nav>/, nav);
+  if (name === 'index.html') {
+    // Put the shared page links on the right, after proof search.
+    page = page.replace(/(<nav class="ck-primary"[^>]*>[\s\S]*?<\/nav>)(<div class="search-wrap">[\s\S]*?<div id="search-results" hidden><\/div><\/div>)/, '$2$1');
+  }
+  if (name === 'lean-writeup.html') {
+    page = page.replace('<body>', '<body class="ck-writeup">');
+    if (!page.includes('href="edition.css')) page = page.replace('</head>', '<link rel="stylesheet" href="edition.css?v=shared-nav-1"></head>');
+    if (!page.includes('class="ck-primary"')) page = page.replace(/<header>[\s\S]*?<nav aria-label="Document actions">/, '<header><a class="document-label" href="home.html">Lean certificate writeup</a>' + nav + '<nav aria-label="Document actions">');
+  }
+  return page.replace(/href="edition.css[^"]*"/g, 'href="edition.css?v=shared-nav-1"');
+}
+
 export function refineCKPages(input) {
   const pages = { ...input };
   for (const name of ['index.html', 'home.html', 'blog.html', 'lean-writeup.html', 'prompting.html', 'ai-disclosure.html']) {
     if (typeof pages[name] !== 'string') throw new Error('Missing CK reader page: ' + name);
-    pages[name] = pages[name]
+    pages[name] = sharedNavigation(pages[name], name)
       .replace(/(<a class="(?:wordmark|brand)" href=")blog\.html(")/g, '$1home.html$2')
       .replaceAll('aria-label="Return to the Courtade–Kumar blog"', 'aria-label="Courtade–Kumar home"')
       .replaceAll('aria-label="Courtade–Kumar research notes home"', 'aria-label="Courtade–Kumar home"')

@@ -50,3 +50,19 @@ html:has(body.ck-blog){scroll-padding-top:120px}
 .ck-blog .site-header{position:sticky;top:0;z-index:40;background:var(--paper);padding-top:20px;padding-bottom:20px}
 @media(max-width:760px){html:has(body.ck-blog){scroll-padding-top:160px}}
 @media(max-width:380px){.ck-primary{flex-wrap:wrap;gap:0 12px;font-size:12px;max-width:100%;min-width:0;flex-shrink:1}}
+
+/* Keep the same page navigation visible in every reading view. */
+.ck-home .site-header,.ck-blog .site-header{position:sticky;top:0;z-index:40;background:var(--paper,#fff);padding-top:20px;padding-bottom:20px}
+.ck-primary{flex-wrap:wrap;gap:0 18px;min-width:0}
+.ck-primary a{display:block!important}
+.ck-proof{display:flex;flex-direction:column;height:100dvh}
+.ck-proof>header{height:auto;min-height:64px;flex-shrink:0;flex-wrap:wrap;gap:8px 20px;padding-top:8px;padding-bottom:8px;z-index:40}
+.ck-proof>main{flex:1;min-height:0;height:auto}
+.ck-proof>header .ck-primary{margin-left:auto}
+.ck-proof>header>nav[aria-label="Paper resources"]{margin-left:0}
+.ck-writeup>header{height:auto;min-height:64px;flex-wrap:wrap;gap:12px 24px}
+.ck-writeup>header .document-label{margin-right:auto;text-decoration:none;white-space:nowrap}
+.ck-writeup>header .ck-primary{margin-left:auto}
+.ck-writeup>header nav[aria-label="Document actions"]{margin-left:0}
+@media(max-width:1000px){.ck-proof>header .search-wrap{order:4;flex-basis:100%;max-width:none}.ck-proof>header .ck-primary{flex:1;justify-content:flex-end}}
+@media(max-width:760px){.ck-proof>header .ck-primary{order:3;flex-basis:100%;justify-content:flex-start}.ck-writeup>header .document-label{display:block}.ck-writeup>header .ck-primary{flex-basis:100%;margin-left:0}.ck-primary{gap:0 14px}}
