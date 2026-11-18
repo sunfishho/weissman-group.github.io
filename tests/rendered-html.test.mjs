@@ -9,8 +9,8 @@ test("exports the approved shared CK landing page without the removed label", as
   const home = await readFile(new URL("ck/home.html", clientRoot), "utf8");
   const css = await readFile(new URL("ck/edition.css", clientRoot), "utf8");
   assert.match(home, /<h1>What is the most informative bit in a noisy string\?<\/h1>/);
-  assert.match(home, /It might seem obvious that combining all the bits should help… until you try to beat simply copying one coordinate\./);
-  assert.match(home, /An exposition of our AI-assisted research effort/);
+  assert.match(home, /Turns out, you can't do better than just copying one of the bits\./);
+  assert.match(home, /An exposition of our AI-assisted research effort to resolve and formalize the proof of the Courtade-Kumar conjecture\./);
   assert.match(home, /A graphical visualization of the proof and its dependencies/);
   assert.doesNotMatch(home, /Information theory · Courtade–Kumar|class="ck-eyebrow"/);
   assert.match(home, /href="home.html" aria-current="page">Home/);

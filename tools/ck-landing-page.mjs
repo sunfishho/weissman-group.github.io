@@ -1,11 +1,11 @@
 // Approved public landing copy. Keep it independent of local preview files.
 export const landingCopy = {
   title: 'What is the most informative bit in a noisy string?',
-  setup: 'You summarize a string of random bits with a single yes-or-no answer, while someone else sees only a noisy copy of the original string. It might seem obvious that combining all the bits should help… until you try to beat simply copying one coordinate.',
-  context: 'An exposition of our AI-assisted research effort aimed towards resolving the Courtade–Kumar conjecture.',
-  blogDescription: 'The main ideas behind our argument, explained step by step.',
+  setup: "You summarize a string of random bits with a single yes-or-no answer, while someone else sees only a noisy copy of the original string. Given a noisy copy of a string of bits, what's the best any single-bit statistic can do to tell us about the original string of bits? Turns out, you can't do better than just copying one of the bits.",
+  context: 'An exposition of our AI-assisted research effort to resolve and formalize the proof of the Courtade-Kumar conjecture.',
+  blogDescription: 'An introduction to the problem and the main ideas of our argument.',
   visualTitle: 'A graphical visualization of the proof and its dependencies',
-  visualDescription: 'Read each result and see which earlier results it uses.',
+  visualDescription: 'See an interactive view of the intermediate results within the proof. This is an experimental feature designed to explore what math communication may look like in the AI era.',
 };
 
 export function refineCKLandingPage(page) {
@@ -20,7 +20,7 @@ export function refineCKLandingPage(page) {
 </div>
 <section class="ck-supporting ck-usage" aria-labelledby="usage-heading"><h2 id="usage-heading">AI Usage</h2><div><a href="ai-disclosure.html">Read the AI Usage statement →</a><p>A description of which models we used and how we used them</p></div></section>
 <section class="ck-supporting" aria-labelledby="lean-heading"><h2 id="lean-heading">Lean certificate work</h2><div><a href="lean-writeup.html">Read the Lean certificate writeup →</a><p>A description of how each of the nine Lean certificate families was built in the formalization effort</p></div></section>
-<section class="ck-supporting" aria-labelledby="prompt-heading"><h2 id="prompt-heading">Prompting</h2><div><a href="prompting.html">Read the original prompt →</a><p>The prompt we gave to GPT 5.6 Sol that would eventually result in a solution to the Courtade-Kumar conjecture</p></div></section>
+<section class="ck-supporting" aria-labelledby="prompt-heading"><h2 id="prompt-heading">Prompting</h2><div><a href="prompting.html">Read the original prompt →</a><p>Our prompt to GPT 5.6 Sol that led to a proof of the Courtade-Kumar conjecture</p></div></section>
 <p class="ck-home-authors">Matthew Ho · Abhiram Gorle · Tsachy Weissman<br><span>Department of Electrical Engineering, Stanford University</span></p>
 </main>`;
   return page.replace(/<main class="ck-home-main">[\s\S]*?<\/main>/, main);
